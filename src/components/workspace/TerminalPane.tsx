@@ -171,11 +171,12 @@ export function TerminalPane({ pane, workspace, isActive, onActivate, onClose, f
   const isError = pane.status === 'error'
 
   const providerAgents: ProviderType[] = ['claude', 'codex', 'gemini', 'agy']
-  const activeAccountName = providerAgents.includes(pane.agent as ProviderType)
-    ? useAccountStore((s) => s.providers[pane.agent as ProviderType]?.accounts.find(
-        (a) => a.id === s.providers[pane.agent as ProviderType]?.activeAccountId
-      )?.label ?? null)
-    : null
+  const activeAccountLabel = useAccountStore((s) => {
+    const p = s.providers[pane.agent as ProviderType]
+    if (!p) return null
+    return p.accounts.find((a) => a.id === p.activeAccountId)?.label ?? null
+  })
+  const activeAccountName = providerAgents.includes(pane.agent as ProviderType) ? activeAccountLabel : null
 
   return (
     <div

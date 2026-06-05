@@ -46,15 +46,12 @@ export function WorkspaceLauncher() {
 
   function handleOpen() {
     if (!canLaunch) return
-    const entries = Object.entries(agentCounts) as [AgentType, number][]
-    const primary = entries[0]
-    if (!primary) return
     createWorkspace({
       name: name || path.split(/[\\/]/).pop() || 'workspace',
       path,
-      agent: primary[0],
-      count: totalAgents,
+      agentCounts,
       layout,
+      customCommand: customCommand || undefined,
     })
   }
 

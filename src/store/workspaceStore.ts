@@ -10,9 +10,9 @@ interface WorkspaceState {
   createWorkspace: (opts: {
     name: string
     path: string
-    agent: AgentType
-    count: number
+    agentCounts: Partial<Record<AgentType, number>>
     layout: WorkspaceLayout
+    customCommand?: string
   }) => string
   closeWorkspace: (id: string) => void
   setActiveWorkspace: (id: string) => void
@@ -44,17 +44,24 @@ export const useWorkspaceStore = create<WorkspaceState>()(
       workspaces: [],
       activeWorkspaceId: null,
 
-      createWorkspace: ({ name, path, agent, count, layout }) => {
+      createWorkspace: ({ name, path, agentCounts, layout, customCommand }) => {
         const id = generateId()
-        const panes: Pane[] = Array.from({ length: count }, () =>
-          makePane(id, agent)
-        )
+        const panes: Pane[] = (Object.entries(agentCounts) as [AgentType, number][])
+          .filter(([, count]) => count > 0)
+          .flatMap(([agent, count]) =>
+            Array.from({ length: count }, () =>
+              makePane(id, agent, agent === 'custom' ? customCommand : undefined)
+            )
+          )
+        const primaryAgent = (Object.keys(agentCounts) as AgentType[]).find(
+          (a) => (agentCounts[a] ?? 0) > 0
+        ) ?? 'shell'
         const ws: Workspace = {
           id,
           name: name || path.split(/[\\/]/).pop() || 'workspace',
           path,
           layout,
-          agent,
+          agent: primaryAgent,
           panes,
           createdAt: Date.now(),
           activePane: panes[0]?.id ?? null,
