@@ -1,5 +1,8 @@
 export type AgentType = 'claude' | 'codex' | 'gemini' | 'agy' | 'custom' | 'shell'
 
+export type { ProviderType, Account, UsageStats, ProviderAccounts } from './accounts'
+export { PROVIDER_LABELS, PROVIDER_ENV_VARS, PROVIDER_COLORS, ALL_PROVIDERS, makeDefaultUsage } from './accounts'
+
 export type WorkspaceLayout = 'grid' | 'canvas'
 
 export type PaneStatus = 'idle' | 'working' | 'error' | 'connecting'

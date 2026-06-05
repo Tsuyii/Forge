@@ -1,5 +1,6 @@
-import { Globe, FileText, GitBranch, Grid2x2, Mic, Bell, X, ChevronDown, Minus, Plus } from 'lucide-react'
+import { Globe, FileText, GitBranch, Grid2x2, Mic, Bell, X, ChevronDown, Minus, Plus, LayoutGrid, Gauge } from 'lucide-react'
 import type { Workspace } from '../../types'
+import { AGENT_CONFIGS } from '../../types'
 import { useWorkspaceStore } from '../../store/workspaceStore'
 import { cn } from '../../lib/utils'
 
@@ -11,12 +12,13 @@ interface WorkspaceToolbarProps {
   onTogglePanel: (panel: string) => void
 }
 
-const TOOLBAR_BUTTONS = [
-  { id: 'browser', icon: Globe, title: 'Browser' },
-  { id: 'files', icon: FileText, title: 'File Preview' },
-  { id: 'git', icon: GitBranch, title: 'Git Panel' },
-  { id: 'tasks', icon: Grid2x2, title: 'Agent Tasks' },
-  { id: 'voice', icon: Mic, title: 'SXvoice' },
+const PANEL_BUTTONS = [
+  { id: 'browser', icon: Globe,      title: 'Browser'      },
+  { id: 'files',   icon: FileText,   title: 'File Preview' },
+  { id: 'git',     icon: GitBranch,  title: 'Git'          },
+  { id: 'tasks',   icon: Grid2x2,    title: 'Agent Tasks'  },
+  { id: 'voice',   icon: Mic,        title: 'Voice'        },
+  { id: 'limits',  icon: Gauge,      title: 'Agent Limits (Ctrl+Shift+L)' },
 ]
 
 export function WorkspaceToolbar({
@@ -27,96 +29,129 @@ export function WorkspaceToolbar({
   onTogglePanel,
 }: WorkspaceToolbarProps) {
   const { closeWorkspace } = useWorkspaceStore()
+  const primaryCfg = AGENT_CONFIGS[workspace.agent]
+  const paneIndex = workspace.panes.findIndex((p) => p.id === workspace.activePane)
+  const paneLabel = workspace.panes.length > 0
+    ? `${paneIndex + 1} / ${workspace.panes.length}`
+    : '–'
 
   return (
     <div
-      className="flex items-center gap-1 px-3 py-1.5 shrink-0"
+      className="flex items-center gap-0.5 px-2 py-1 shrink-0"
       style={{ background: 'var(--surface)', borderBottom: '1px solid var(--border)' }}
     >
       {/* Pane counter */}
-      <span className="text-[11px] font-mono mr-1" style={{ color: 'var(--text-muted)' }}>
-        {workspace.panes.length > 0
-          ? `${workspace.panes.findIndex((p) => p.id === workspace.activePane) + 1}/${workspace.panes.length}`
-          : '0/0'}
-      </span>
+      <div
+        className="flex items-center gap-1 px-2 py-1 rounded mr-0.5"
+        style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-subtle)' }}
+      >
+        <LayoutGrid size={11} style={{ color: 'var(--text-subtle)' }} />
+        <span className="text-[11px] font-mono tabular" style={{ color: 'var(--text-muted)' }}>
+          {paneLabel}
+        </span>
+      </div>
 
       <div className="w-px h-4 mx-1" style={{ background: 'var(--border)' }} />
 
       {/* Font size */}
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-0.5">
         <button
           onClick={() => onFontSize(Math.max(9, fontSizePx - 1))}
-          className="flex items-center justify-center w-5 h-5 rounded hover:bg-[var(--surface-hover)] transition-colors"
+          className="flex items-center justify-center w-5 h-5 rounded transition-colors hover:bg-[var(--surface-hover)]"
+          style={{ color: 'var(--text-muted)' }}
+          title="Decrease font size"
+        >
+          <Minus size={9} />
+        </button>
+        <span
+          className="text-[11px] font-mono w-7 text-center tabular"
           style={{ color: 'var(--text-muted)' }}
         >
-          <Minus size={10} />
-        </button>
-        <span className="text-[11px] font-mono w-6 text-center" style={{ color: 'var(--text-muted)' }}>
           {fontSizePx}
         </span>
         <button
           onClick={() => onFontSize(Math.min(24, fontSizePx + 1))}
-          className="flex items-center justify-center w-5 h-5 rounded hover:bg-[var(--surface-hover)] transition-colors"
+          className="flex items-center justify-center w-5 h-5 rounded transition-colors hover:bg-[var(--surface-hover)]"
           style={{ color: 'var(--text-muted)' }}
+          title="Increase font size"
         >
-          <Plus size={10} />
+          <Plus size={9} />
         </button>
       </div>
 
       <div className="w-px h-4 mx-1" style={{ background: 'var(--border)' }} />
 
       {/* Panel toggles */}
-      {TOOLBAR_BUTTONS.map(({ id, icon: Icon, title }) => (
-        <button
-          key={id}
-          onClick={() => onTogglePanel(id)}
-          title={title}
-          className={cn(
-            'flex items-center justify-center w-7 h-7 rounded transition-colors',
-            activePanels.has(id) ? 'bg-[var(--surface-active)]' : 'hover:bg-[var(--surface-hover)]'
-          )}
-          style={{
-            color: activePanels.has(id) ? 'var(--accent-bright)' : 'var(--text-muted)',
-          }}
-        >
-          <Icon size={14} />
-        </button>
-      ))}
+      {PANEL_BUTTONS.map(({ id, icon: Icon, title }) => {
+        const isActive = activePanels.has(id)
+        return (
+          <button
+            key={id}
+            onClick={() => onTogglePanel(id)}
+            title={title}
+            className={cn(
+              'relative flex items-center justify-center w-7 h-7 rounded transition-all',
+              isActive ? 'bg-[var(--surface-active)]' : 'hover:bg-[var(--surface-hover)]'
+            )}
+            style={{ color: isActive ? 'var(--accent-bright)' : 'var(--text-muted)' }}
+          >
+            <Icon size={13} />
+            {isActive && (
+              <span
+                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3 h-[2px] rounded-full"
+                style={{ background: 'var(--accent-bright)' }}
+              />
+            )}
+          </button>
+        )
+      })}
 
       <div className="w-px h-4 mx-1" style={{ background: 'var(--border)' }} />
 
       {/* Bell */}
       <button
-        className="flex items-center justify-center w-7 h-7 rounded hover:bg-[var(--surface-hover)] transition-colors"
+        className="flex items-center justify-center w-7 h-7 rounded transition-colors hover:bg-[var(--surface-hover)]"
         style={{ color: 'var(--text-muted)' }}
         title="Sound notifications"
       >
-        <Bell size={14} />
+        <Bell size={13} />
       </button>
 
       <div className="flex-1" />
 
-      {/* Agent dropdown */}
+      {/* Agent selector */}
       <button
-        className="flex items-center gap-1 px-2.5 py-1 rounded border text-[11px] transition-colors"
-        style={{ background: 'var(--surface-active)', borderColor: 'var(--border)', color: 'var(--text)' }}
+        className="flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-[11px] transition-all"
+        style={{
+          background: 'var(--surface-active)',
+          borderColor: 'var(--border)',
+          color: 'var(--text)',
+        }}
         onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--surface-hover)')}
         onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--surface-active)')}
+        title="Switch agent"
       >
-        Agent
-        <ChevronDown size={11} />
+        <span className="font-mono" style={{ color: primaryCfg.color }}>{primaryCfg.icon}</span>
+        <span>{primaryCfg.label}</span>
+        <ChevronDown size={10} style={{ color: 'var(--text-muted)' }} />
       </button>
 
       {/* Close workspace */}
       <button
         onClick={() => closeWorkspace(workspace.id)}
-        className="flex items-center justify-center w-7 h-7 rounded transition-colors hover:bg-[var(--surface-hover)]"
+        className="flex items-center justify-center w-7 h-7 rounded transition-all hover:bg-[var(--surface-hover)] ml-1"
         style={{ color: 'var(--text-muted)' }}
-        onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--status-error)')}
-        onMouseLeave={(e) => (e.currentTarget.style.color = '')}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.color = 'var(--status-error)'
+          e.currentTarget.style.background = 'rgba(248,113,113,0.08)'
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.color = ''
+          e.currentTarget.style.background = ''
+        }}
         title="Close workspace"
       >
-        <X size={14} />
+        <X size={13} />
       </button>
     </div>
   )

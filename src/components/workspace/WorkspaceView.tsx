@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { TabBar } from './TabBar'
 import { WorkspaceToolbar } from './WorkspaceToolbar'
 import { PaneGrid } from './PaneGrid'
+import { AgentLimitsPanel } from '../limits/AgentLimitsPanel'
 import type { Workspace } from '../../types'
 
 interface WorkspaceViewProps {
@@ -21,6 +22,20 @@ export function WorkspaceView({ workspace }: WorkspaceViewProps) {
     })
   }
 
+  // Ctrl+Shift+L shortcut to toggle limits panel
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.ctrlKey && e.shiftKey && e.key === 'L') {
+        e.preventDefault()
+        togglePanel('limits')
+      }
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [])
+
+  const showLimits = activePanels.has('limits')
+
   return (
     <div className="flex flex-col flex-1 h-full overflow-hidden">
       <TabBar workspace={workspace} />
@@ -31,7 +46,12 @@ export function WorkspaceView({ workspace }: WorkspaceViewProps) {
         activePanels={activePanels}
         onTogglePanel={togglePanel}
       />
-      <PaneGrid workspace={workspace} fontSizePx={fontSizePx} />
+      <div className="flex flex-1 overflow-hidden">
+        <PaneGrid workspace={workspace} fontSizePx={fontSizePx} />
+        {showLimits && (
+          <AgentLimitsPanel onClose={() => togglePanel('limits')} />
+        )}
+      </div>
     </div>
   )
 }

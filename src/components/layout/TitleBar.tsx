@@ -2,6 +2,12 @@ import type { CSSProperties } from 'react'
 import { getCurrentWindow } from '@tauri-apps/api/window'
 import { Minus, Square, X } from 'lucide-react'
 
+const METRICS = [
+  { key: 'CPU', value: '–%' },
+  { key: 'GPU', value: '–%' },
+  { key: 'LAT', value: '–ms' },
+]
+
 export function TitleBar() {
   const win = getCurrentWindow()
 
@@ -11,22 +17,57 @@ export function TitleBar() {
       className="flex items-center justify-between h-9 px-3 shrink-0 select-none"
       style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-subtle)' }}
     >
-      {/* Left: logo + name */}
-      <div className="flex items-center gap-2 text-xs font-semibold" style={{ color: 'var(--text-muted)' }}>
-        <span className="text-sm" style={{ color: 'var(--accent-bright)' }}>⬡</span>
-        <span style={{ color: 'var(--text)' }}>Forge</span>
-        <span className="text-[10px] tracking-widest" style={{ color: 'var(--text-subtle)' }}>AGENT DEV ENV</span>
+      {/* Left: logo */}
+      <div className="flex items-center gap-2.5">
+        <div
+          className="w-5 h-5 rounded-md flex items-center justify-center"
+          style={{ background: 'var(--surface-active)', border: '1px solid var(--border)' }}
+        >
+          <span style={{ color: 'var(--accent-bright)', fontSize: 11, lineHeight: 1 }}>⬡</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <span className="text-[12px] font-bold tracking-tight" style={{ color: 'var(--text)' }}>
+            Forge
+          </span>
+          <span
+            className="text-[8px] tracking-[0.18em] uppercase px-1.5 py-0.5 rounded"
+            style={{
+              color: 'var(--text-subtle)',
+              background: 'var(--surface)',
+              border: '1px solid var(--border-subtle)',
+            }}
+          >
+            Agent Dev
+          </span>
+        </div>
       </div>
 
       {/* Center: perf metrics */}
-      <div className="flex items-center gap-3 text-[10px] font-mono" style={{ color: 'var(--text-subtle)' }}>
-        <span>CPU –%</span>
-        <span>GPU –%</span>
-        <span>LAT –ms</span>
+      <div className="flex items-center gap-1.5">
+        {METRICS.map(({ key, value }) => (
+          <div
+            key={key}
+            className="flex items-center gap-1 px-2 py-0.5 rounded"
+            style={{
+              background: 'var(--surface)',
+              border: '1px solid var(--border-subtle)',
+            }}
+          >
+            <span className="text-[9px] font-mono tracking-wide" style={{ color: 'var(--text-subtle)' }}>
+              {key}
+            </span>
+            <span className="text-[9px] font-mono tabular" style={{ color: 'var(--text-muted)' }}>
+              {value}
+            </span>
+          </div>
+        ))}
       </div>
 
       {/* Right: window controls */}
-      <div className="flex items-center gap-1" style={{ WebkitAppRegion: 'no-drag' } as CSSProperties}>
+      <div
+        className="flex items-center gap-0.5"
+        style={{ WebkitAppRegion: 'no-drag' } as CSSProperties}
+      >
         <button
           onClick={() => win.minimize()}
           className="flex items-center justify-center w-8 h-7 rounded transition-colors duration-100"
@@ -34,7 +75,7 @@ export function TitleBar() {
           onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--surface-hover)')}
           onMouseLeave={(e) => (e.currentTarget.style.background = '')}
         >
-          <Minus size={12} />
+          <Minus size={11} />
         </button>
         <button
           onClick={() => win.toggleMaximize()}
@@ -43,16 +84,22 @@ export function TitleBar() {
           onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--surface-hover)')}
           onMouseLeave={(e) => (e.currentTarget.style.background = '')}
         >
-          <Square size={11} />
+          <Square size={10} />
         </button>
         <button
           onClick={() => win.close()}
           className="flex items-center justify-center w-8 h-7 rounded transition-colors duration-100"
           style={{ color: 'var(--text-muted)' }}
-          onMouseEnter={(e) => { e.currentTarget.style.background = '#c0392b'; e.currentTarget.style.color = '#fff' }}
-          onMouseLeave={(e) => { e.currentTarget.style.background = ''; e.currentTarget.style.color = '' }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = '#c0392b'
+            e.currentTarget.style.color = '#fff'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = ''
+            e.currentTarget.style.color = ''
+          }}
         >
-          <X size={12} />
+          <X size={11} />
         </button>
       </div>
     </div>

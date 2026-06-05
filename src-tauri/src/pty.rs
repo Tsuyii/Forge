@@ -21,6 +21,7 @@ pub async fn create_pty(
     cwd: String,
     cols: u16,
     rows: u16,
+    env_vars: Option<HashMap<String, String>>,
 ) -> Result<String, String> {
     let pty_id = Uuid::new_v4().to_string();
     let pty_id_clone = pty_id.clone();
@@ -37,6 +38,11 @@ pub async fn create_pty(
     // Add environment variables for agent CLIs
     cmd.env("TERM", "xterm-256color");
     cmd.env("COLORTERM", "truecolor");
+    if let Some(vars) = env_vars {
+        for (key, value) in vars {
+            cmd.env(&key, &value);
+        }
+    }
 
     let _child = pair.slave.spawn_command(cmd).map_err(|e| e.to_string())?;
 
