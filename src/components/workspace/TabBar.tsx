@@ -56,7 +56,7 @@ export function TabBar({ workspace }: TabBarProps) {
             {isActive && (
               <span
                 className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-[2px] rounded-full"
-                style={{ background: 'var(--accent-bright)' }}
+                style={{ background: 'var(--cta)' }}
               />
             )}
           </button>

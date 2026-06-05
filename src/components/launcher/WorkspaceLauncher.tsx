@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Clock, FolderOpen, Grid, Layers, Minus, Plus, Zap } from 'lucide-react'
+import { Clock, FolderOpen, Grid, Layers, Minus, Plus, Zap, ChevronRight } from 'lucide-react'
 import { open as openDialog } from '@tauri-apps/plugin-dialog'
 import { useWorkspaceStore } from '../../store/workspaceStore'
 import type { AgentType, WorkspaceLayout } from '../../types'
@@ -9,8 +9,8 @@ import { cn } from '../../lib/utils'
 const AGENTS: AgentType[] = ['claude', 'codex', 'gemini', 'agy', 'custom', 'shell']
 
 const LAYOUTS = [
-  { key: 'grid' as WorkspaceLayout, icon: Grid, title: 'Workspace', desc: 'Tabbed pane grid', disabled: false },
-  { key: 'canvas' as WorkspaceLayout, icon: Layers, title: 'Canvas', desc: 'Coming in v2', disabled: true },
+  { key: 'grid' as WorkspaceLayout, icon: Grid,   title: 'Grid',   desc: 'Tabbed pane grid', disabled: false },
+  { key: 'canvas' as WorkspaceLayout, icon: Layers, title: 'Canvas', desc: 'Coming in v2',  disabled: true  },
 ]
 
 export function WorkspaceLauncher() {
@@ -58,9 +58,9 @@ export function WorkspaceLauncher() {
   return (
     <div className="flex flex-1 h-full overflow-hidden animate-fadeIn" style={{ background: 'var(--bg)' }}>
 
-      {/* ── Left brand panel ─────────────────────────── */}
+      {/* ── Left brand panel ──────────────────────────── */}
       <div
-        className="w-[268px] shrink-0 flex flex-col border-r"
+        className="w-[272px] shrink-0 flex flex-col border-r"
         style={{ background: 'var(--bg-secondary)', borderColor: 'var(--border-subtle)' }}
       >
         {/* Logo */}
@@ -68,12 +68,16 @@ export function WorkspaceLauncher() {
           <div className="flex items-center gap-3">
             <div
               className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-              style={{ background: 'var(--surface-active)', border: '1px solid var(--border)' }}
+              style={{
+                background: 'linear-gradient(135deg, var(--surface-active) 0%, var(--surface-hover) 100%)',
+                border: '1px solid var(--border)',
+                boxShadow: 'var(--shadow-sm)',
+              }}
             >
-              <span style={{ color: 'var(--accent-bright)', fontSize: 20, lineHeight: 1 }}>⬡</span>
+              <span style={{ color: 'var(--cta)', fontSize: 20, lineHeight: 1 }}>⬡</span>
             </div>
             <div>
-              <div className="text-[15px] font-bold leading-tight tracking-tight" style={{ color: 'var(--text)' }}>
+              <div className="text-[16px] font-bold leading-tight tracking-tight" style={{ color: 'var(--text)' }}>
                 Forge
               </div>
               <div className="text-[9px] tracking-[0.18em] uppercase font-medium mt-0.5" style={{ color: 'var(--text-subtle)' }}>
@@ -84,9 +88,9 @@ export function WorkspaceLauncher() {
         </div>
 
         {/* Live config preview */}
-        <div className="px-5 py-4 border-b" style={{ borderColor: 'var(--border-subtle)' }}>
+        <div className="px-4 py-4 border-b" style={{ borderColor: 'var(--border-subtle)' }}>
           <div className="text-[9px] font-semibold tracking-widest uppercase mb-2.5" style={{ color: 'var(--text-subtle)' }}>
-            Configuration
+            Preview
           </div>
           {activeAgents.length > 0 ? (
             <div className="space-y-1.5">
@@ -95,8 +99,12 @@ export function WorkspaceLauncher() {
                 return (
                   <div
                     key={agent}
-                    className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg"
-                    style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+                    className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg"
+                    style={{
+                      background: 'var(--surface)',
+                      border: `1px solid var(--border)`,
+                      borderLeft: `2px solid ${cfg.color}`,
+                    }}
                   >
                     <span className="font-mono text-[13px] shrink-0 w-4 text-center" style={{ color: cfg.color }}>
                       {cfg.icon}
@@ -113,13 +121,16 @@ export function WorkspaceLauncher() {
                   </div>
                 )
               })}
-              <div className="text-[10px] px-1 mt-1" style={{ color: 'var(--text-subtle)' }}>
-                {totalAgents} pane{totalAgents !== 1 ? 's' : ''} total
+              <div className="text-[10px] px-1 mt-1.5" style={{ color: 'var(--text-subtle)' }}>
+                {totalAgents} pane{totalAgents !== 1 ? 's' : ''} · {layout}
               </div>
             </div>
           ) : (
-            <div className="text-[11px] py-2" style={{ color: 'var(--text-subtle)' }}>
-              No agents configured yet
+            <div
+              className="text-[11px] py-4 px-3 text-center rounded-lg"
+              style={{ color: 'var(--text-subtle)', border: '1px dashed var(--border)' }}
+            >
+              Select agents below
             </div>
           )}
         </div>
@@ -138,7 +149,7 @@ export function WorkspaceLauncher() {
                   <button
                     key={p}
                     onClick={() => setPath(p)}
-                    className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-left transition-all"
+                    className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-left transition-all group"
                     style={{ color: 'var(--text-muted)' }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.background = 'var(--surface-hover)'
@@ -158,12 +169,17 @@ export function WorkspaceLauncher() {
                         </div>
                       )}
                     </div>
+                    <ChevronRight
+                      size={10}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
+                      style={{ color: 'var(--text-subtle)' }}
+                    />
                   </button>
                 )
               })}
             </div>
           ) : (
-            <div className="text-[11px] py-3 text-center" style={{ color: 'var(--text-subtle)' }}>
+            <div className="text-[11px] py-4 text-center" style={{ color: 'var(--text-subtle)' }}>
               No recent workspaces
             </div>
           )}
@@ -180,25 +196,25 @@ export function WorkspaceLauncher() {
         </div>
       </div>
 
-      {/* ── Right form panel ─────────────────────────── */}
+      {/* ── Right form panel ──────────────────────────── */}
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-[420px] px-8 py-8 mx-auto">
 
           {/* Header */}
           <div className="mb-7 animate-fadeInUp" style={{ animationDelay: '0ms' }}>
-            <h1 className="text-[15px] font-semibold tracking-tight" style={{ color: 'var(--text)' }}>
+            <h1 className="text-[16px] font-semibold tracking-tight" style={{ color: 'var(--text)', letterSpacing: '-0.02em' }}>
               New Workspace
             </h1>
             <p className="text-[11px] mt-1" style={{ color: 'var(--text-muted)' }}>
-              Configure your multi-agent environment
+              Configure your multi-agent development environment
             </p>
           </div>
 
           {/* Layout */}
-          <div className="mb-5 animate-fadeInUp" style={{ animationDelay: '40ms' }}>
-            <div className="text-[10px] font-semibold tracking-widest uppercase mb-2" style={{ color: 'var(--text-subtle)' }}>
+          <div className="mb-6 animate-fadeInUp" style={{ animationDelay: '40ms' }}>
+            <label className="block text-[10px] font-semibold tracking-widest uppercase mb-2" style={{ color: 'var(--text-subtle)' }}>
               Layout
-            </div>
+            </label>
             <div className="grid grid-cols-2 gap-2">
               {LAYOUTS.map(({ key, icon: Icon, title, desc, disabled }) => (
                 <button
@@ -207,21 +223,24 @@ export function WorkspaceLauncher() {
                   disabled={disabled}
                   className={cn(
                     'flex items-center gap-3 p-3.5 rounded-lg border text-left transition-all',
+                    !disabled && layout !== key && 'hover:border-[var(--accent)]',
                     disabled ? 'cursor-not-allowed' : 'cursor-pointer'
                   )}
                   style={{
-                    background: layout === key && !disabled ? 'var(--surface-active)' : 'var(--surface)',
-                    borderColor: layout === key && !disabled ? 'var(--accent)' : 'var(--border)',
-                    opacity: disabled ? 0.38 : 1,
+                    background:  layout === key && !disabled ? 'var(--surface-active)' : 'var(--surface)',
+                    borderColor: layout === key && !disabled ? 'var(--cta)' : 'var(--border)',
+                    opacity:     disabled ? 0.38 : 1,
                   }}
                 >
                   <div
                     className="w-7 h-7 rounded-md flex items-center justify-center shrink-0"
-                    style={{ background: layout === key && !disabled ? 'var(--surface-hover)' : 'var(--bg-secondary)' }}
+                    style={{
+                      background: layout === key && !disabled ? 'var(--surface-hover)' : 'var(--bg-secondary)',
+                    }}
                   >
                     <Icon
                       size={14}
-                      style={{ color: layout === key && !disabled ? 'var(--accent-bright)' : 'var(--text-muted)' }}
+                      style={{ color: layout === key && !disabled ? 'var(--cta)' : 'var(--text-muted)' }}
                     />
                   </div>
                   <div>
@@ -235,9 +254,9 @@ export function WorkspaceLauncher() {
 
           {/* Directory */}
           <div className="mb-5 animate-fadeInUp" style={{ animationDelay: '80ms' }}>
-            <div className="text-[10px] font-semibold tracking-widest uppercase mb-2" style={{ color: 'var(--text-subtle)' }}>
+            <label className="block text-[10px] font-semibold tracking-widest uppercase mb-2" style={{ color: 'var(--text-subtle)' }}>
               Directory
-            </div>
+            </label>
             <div className="flex gap-2">
               <input
                 value={path}
@@ -245,7 +264,7 @@ export function WorkspaceLauncher() {
                 placeholder="C:\Users\you\project"
                 className="flex-1 px-3 py-2 rounded-lg text-[12px] font-mono outline-none border transition-all"
                 style={{ background: 'var(--surface)', borderColor: 'var(--border)', color: 'var(--text)' }}
-                onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--accent)')}
+                onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--cta)')}
                 onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--border)')}
               />
               <button
@@ -254,10 +273,12 @@ export function WorkspaceLauncher() {
                 style={{ background: 'var(--surface)', borderColor: 'var(--border)', color: 'var(--text-muted)' }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = 'var(--surface-hover)'
+                  e.currentTarget.style.borderColor = 'var(--accent)'
                   e.currentTarget.style.color = 'var(--text)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = ''
+                  e.currentTarget.style.borderColor = ''
                   e.currentTarget.style.color = ''
                 }}
               >
@@ -268,12 +289,12 @@ export function WorkspaceLauncher() {
           </div>
 
           {/* Name */}
-          <div className="mb-5 animate-fadeInUp" style={{ animationDelay: '100ms' }}>
-            <div className="flex items-center gap-2 mb-2">
-              <div className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: 'var(--text-subtle)' }}>
+          <div className="mb-6 animate-fadeInUp" style={{ animationDelay: '100ms' }}>
+            <div className="flex items-baseline gap-2 mb-2">
+              <label className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: 'var(--text-subtle)' }}>
                 Name
-              </div>
-              <div className="text-[10px]" style={{ color: 'var(--text-subtle)' }}>— optional</div>
+              </label>
+              <span className="text-[10px]" style={{ color: 'var(--text-subtle)' }}>optional</span>
             </div>
             <input
               value={name}
@@ -281,17 +302,17 @@ export function WorkspaceLauncher() {
               placeholder="my-project"
               className="w-full px-3 py-2 rounded-lg text-[12px] outline-none border transition-all"
               style={{ background: 'var(--surface)', borderColor: 'var(--border)', color: 'var(--text)' }}
-              onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--accent)')}
+              onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--cta)')}
               onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--border)')}
             />
           </div>
 
           {/* Agents */}
           <div className="mb-7 animate-fadeInUp" style={{ animationDelay: '120ms' }}>
-            <div className="flex items-center justify-between mb-2">
-              <div className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: 'var(--text-subtle)' }}>
+            <div className="flex items-center justify-between mb-2.5">
+              <label className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: 'var(--text-subtle)' }}>
                 Agents
-              </div>
+              </label>
               <div className="flex gap-1">
                 {(['1 each', 'Fill', 'Clear'] as const).map((label) => (
                   <button
@@ -322,58 +343,66 @@ export function WorkspaceLauncher() {
               {AGENTS.map((agentKey) => {
                 const cfg = AGENT_CONFIGS[agentKey]
                 const count = agentCounts[agentKey] ?? 0
+                const isSelected = count > 0
                 return (
                   <div
                     key={agentKey}
                     className="flex items-center gap-3 px-3 py-2.5 rounded-lg border transition-all"
                     style={{
-                      background: count > 0 ? 'var(--surface-active)' : 'var(--surface)',
-                      borderColor: count > 0 ? 'var(--accent)' : 'var(--border)',
-                      borderLeftColor: count > 0 ? cfg.color : undefined,
-                      borderLeftWidth: count > 0 ? '2px' : undefined,
+                      background:      isSelected ? 'var(--surface-active)' : 'var(--surface)',
+                      borderColor:     isSelected ? cfg.color + '60' : 'var(--border)',
+                      borderLeftColor: isSelected ? cfg.color : undefined,
+                      borderLeftWidth: isSelected ? '2px' : undefined,
                     }}
                   >
-                    <span className="font-mono text-[13px] w-5 text-center shrink-0" style={{ color: cfg.color }}>
+                    <span
+                      className="font-mono text-[13px] w-5 text-center shrink-0"
+                      style={{ color: isSelected ? cfg.color : 'var(--text-subtle)' }}
+                    >
                       {cfg.icon}
                     </span>
                     <span
                       className="flex-1 text-[12px]"
-                      style={{ color: count > 0 ? 'var(--text)' : 'var(--text-muted)' }}
+                      style={{ color: isSelected ? 'var(--text)' : 'var(--text-muted)' }}
                     >
                       {cfg.label}
                     </span>
 
-                    {agentKey === 'custom' && count > 0 && (
+                    {agentKey === 'custom' && isSelected && (
                       <input
                         value={customCommand}
                         onChange={(e) => setCustomCommand(e.target.value)}
                         placeholder="command..."
-                        className="flex-1 px-2 py-0.5 rounded text-[11px] outline-none border"
+                        className="flex-1 px-2 py-0.5 rounded text-[11px] outline-none border transition-all"
                         style={{ background: 'var(--bg)', borderColor: 'var(--border)', color: 'var(--text)' }}
+                        onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--cta)')}
+                        onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--border)')}
                       />
                     )}
 
-                    <div className="flex items-center gap-1.5 shrink-0">
+                    <div className="flex items-center gap-1 shrink-0">
                       <button
                         onClick={() => setCount(agentKey, -1)}
                         disabled={count === 0}
-                        className="flex items-center justify-center w-5 h-5 rounded transition-all disabled:opacity-25 hover:bg-[var(--surface-hover)]"
+                        className="flex items-center justify-center w-6 h-6 rounded transition-all disabled:opacity-25 hover:bg-[var(--surface-hover)]"
                         style={{ color: 'var(--text-muted)' }}
+                        aria-label={`Decrease ${cfg.label} count`}
                       >
                         <Minus size={10} />
                       </button>
                       <span
                         className="w-6 text-center text-[12px] font-mono font-bold tabular"
-                        style={{ color: count > 0 ? 'var(--text)' : 'var(--text-subtle)' }}
+                        style={{ color: isSelected ? 'var(--text)' : 'var(--text-subtle)' }}
                       >
                         {count}
                       </span>
                       <button
                         onClick={() => setCount(agentKey, 1)}
-                        className="flex items-center justify-center w-5 h-5 rounded transition-all hover:bg-[var(--surface-hover)]"
+                        className="flex items-center justify-center w-6 h-6 rounded transition-all hover:bg-[var(--surface-hover)]"
                         style={{ color: 'var(--text-muted)' }}
                         onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text)')}
                         onMouseLeave={(e) => (e.currentTarget.style.color = '')}
+                        aria-label={`Increase ${cfg.label} count`}
                       >
                         <Plus size={10} />
                       </button>
@@ -389,22 +418,46 @@ export function WorkspaceLauncher() {
             <button
               onClick={handleOpen}
               disabled={!canLaunch}
-              className="w-full py-3 rounded-lg font-semibold text-[13px] transition-all flex items-center justify-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed"
-              style={{ background: 'var(--accent)', color: 'var(--bg)' }}
-              onMouseEnter={(e) => { if (canLaunch) e.currentTarget.style.background = 'var(--accent-bright)' }}
-              onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--accent)')}
+              className="w-full py-3 rounded-lg font-semibold text-[13px] transition-all flex items-center justify-center gap-2 disabled:cursor-not-allowed"
+              style={{
+                background:  canLaunch ? 'var(--cta)' : 'var(--surface-active)',
+                color:       canLaunch ? 'var(--cta-text)' : 'var(--text-subtle)',
+                border:      canLaunch ? '1px solid transparent' : '1px solid var(--border)',
+                boxShadow:   canLaunch ? '0 4px 14px rgba(79, 142, 247, 0.25)' : 'none',
+                opacity:     canLaunch ? 1 : 0.6,
+              }}
+              onMouseEnter={(e) => {
+                if (!canLaunch) return
+                e.currentTarget.style.background = 'var(--cta-hover)'
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(79, 142, 247, 0.35)'
+              }}
+              onMouseLeave={(e) => {
+                if (!canLaunch) return
+                e.currentTarget.style.background = 'var(--cta)'
+                e.currentTarget.style.boxShadow = '0 4px 14px rgba(79, 142, 247, 0.25)'
+              }}
             >
               <Zap size={14} />
               Launch Workspace
               {totalAgents > 0 && (
                 <span
                   className="ml-1 px-2 py-0.5 rounded text-[10px] font-mono tabular"
-                  style={{ background: 'rgba(0,0,0,0.22)', color: 'inherit' }}
+                  style={{ background: 'rgba(0,0,0,0.15)', color: 'inherit' }}
                 >
                   {totalAgents} agent{totalAgents !== 1 ? 's' : ''}
                 </span>
               )}
             </button>
+            {!path && (
+              <p className="text-center text-[10px] mt-2" style={{ color: 'var(--text-subtle)' }}>
+                Select a directory to continue
+              </p>
+            )}
+            {path && totalAgents === 0 && (
+              <p className="text-center text-[10px] mt-2" style={{ color: 'var(--text-subtle)' }}>
+                Add at least one agent to continue
+              </p>
+            )}
           </div>
 
         </div>

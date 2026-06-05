@@ -183,11 +183,11 @@ export function TerminalPane({ pane, workspace, isActive, onActivate, onClose, f
       onClick={onActivate}
       className="flex flex-col h-full rounded-lg overflow-hidden transition-all"
       style={{
-        background:   'var(--bg-secondary)',
-        border:       `1px solid ${isActive ? cfg.color : 'var(--border)'}`,
-        borderLeft:   isActive ? `2px solid ${cfg.color}` : undefined,
-        boxShadow:    isActive ? `0 0 0 0 transparent` : undefined,
-        opacity:      isError ? 0.85 : 1,
+        background:  'var(--bg-secondary)',
+        border:      `1px solid ${isActive ? cfg.color : 'var(--border)'}`,
+        borderLeft:  isActive ? `2px solid ${cfg.color}` : undefined,
+        boxShadow:   isActive ? `0 2px 12px rgba(0,0,0,0.3)` : undefined,
+        opacity:     isError ? 0.85 : 1,
       }}
     >
       {/* Pane header */}
@@ -206,6 +206,7 @@ export function TerminalPane({ pane, workspace, isActive, onActivate, onClose, f
           <span
             className={cn('absolute -bottom-0.5 -right-0.5 w-1.5 h-1.5 rounded-full', isWorking && 'animate-pulse-dot')}
             style={{ background: statusColor, border: '1px solid var(--surface)' }}
+            aria-hidden="true"
           />
         </div>
 
@@ -217,28 +218,37 @@ export function TerminalPane({ pane, workspace, isActive, onActivate, onClose, f
 
         {/* Controls */}
         <button
-          className="flex items-center justify-center w-5 h-5 rounded transition-all hover:bg-[var(--surface-hover)]"
+          className="flex items-center justify-center w-6 h-6 rounded transition-all hover:bg-[var(--surface-hover)]"
           style={{ color: 'var(--text-subtle)' }}
           title="Rename"
+          aria-label="Rename pane"
         >
-          <Pencil size={9} />
+          <Pencil size={10} />
         </button>
         <button
-          className="flex items-center justify-center w-5 h-5 rounded transition-all hover:bg-[var(--surface-hover)]"
+          className="flex items-center justify-center w-6 h-6 rounded transition-all hover:bg-[var(--surface-hover)]"
           style={{ color: 'var(--text-subtle)' }}
           title="Expand"
+          aria-label="Expand pane"
         >
-          <Maximize2 size={9} />
+          <Maximize2 size={10} />
         </button>
         <button
           onClick={(e) => { e.stopPropagation(); onClose() }}
-          className="flex items-center justify-center w-5 h-5 rounded transition-all hover:bg-[var(--surface-hover)]"
+          className="flex items-center justify-center w-6 h-6 rounded transition-all"
           style={{ color: 'var(--text-subtle)' }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--status-error)')}
-          onMouseLeave={(e) => (e.currentTarget.style.color = '')}
-          title="Close"
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = 'var(--status-error)'
+            e.currentTarget.style.background = 'rgba(248,113,113,0.1)'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = ''
+            e.currentTarget.style.background = ''
+          }}
+          title="Close pane"
+          aria-label="Close pane"
         >
-          <X size={9} />
+          <X size={10} />
         </button>
       </div>
 

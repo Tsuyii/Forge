@@ -39,6 +39,12 @@
   --status-idle: #4ade80;
   --status-working: #fb923c;
   --status-error: #f87171;
+  --cta: #4f8ef7;
+  --cta-hover: #6fa8ff;
+  --cta-text: #ffffff;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.5);
+  --shadow-md: 0 4px 14px rgba(0,0,0,0.6);
+  --shadow-lg: 0 8px 28px rgba(0,0,0,0.7), 0 2px 6px rgba(0,0,0,0.4);
 }
 
 /* ── Midnight ────────────────────────────────────────────── */
@@ -58,6 +64,12 @@
   --status-idle: #4ade80;
   --status-working: #fb923c;
   --status-error: #f87171;
+  --cta: #4f8ef7;
+  --cta-hover: #6fa8ff;
+  --cta-text: #ffffff;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.7);
+  --shadow-md: 0 4px 14px rgba(0,0,0,0.8);
+  --shadow-lg: 0 8px 28px rgba(0,0,0,0.9), 0 2px 6px rgba(0,0,0,0.5);
 }
 
 /* ── Navy ────────────────────────────────────────────────── */
@@ -77,6 +89,12 @@
   --status-idle: #4ade80;
   --status-working: #fb923c;
   --status-error: #f87171;
+  --cta: #4a8fd4;
+  --cta-hover: #74aee8;
+  --cta-text: #ffffff;
+  --shadow-sm: 0 1px 4px rgba(0,0,0,0.5);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.6);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.7);
 }
 
 /* ── Paper ───────────────────────────────────────────────── */
@@ -96,6 +114,12 @@
   --status-idle: #16a34a;
   --status-working: #ea580c;
   --status-error: #dc2626;
+  --cta: #1d4ed8;
+  --cta-hover: #2563eb;
+  --cta-text: #ffffff;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
 }
 
 /* ── Orange ──────────────────────────────────────────────── */
@@ -115,6 +139,12 @@
   --status-idle: #4ade80;
   --status-working: #fb923c;
   --status-error: #f87171;
+  --cta: #c87941;
+  --cta-hover: #e8a060;
+  --cta-text: #150d05;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.5);
+  --shadow-md: 0 4px 14px rgba(0,0,0,0.6);
+  --shadow-lg: 0 8px 28px rgba(0,0,0,0.7);
 }
 
 /* ── Red ─────────────────────────────────────────────────── */
@@ -134,6 +164,12 @@
   --status-idle: #4ade80;
   --status-working: #fb923c;
   --status-error: #f87171;
+  --cta: #c84141;
+  --cta-hover: #e87070;
+  --cta-text: #150505;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.5);
+  --shadow-md: 0 4px 14px rgba(0,0,0,0.6);
+  --shadow-lg: 0 8px 28px rgba(0,0,0,0.7);
 }
 
 /* ── Green ───────────────────────────────────────────────── */
@@ -153,6 +189,12 @@
   --status-idle: #4ade80;
   --status-working: #fb923c;
   --status-error: #f87171;
+  --cta: #41c854;
+  --cta-hover: #70e882;
+  --cta-text: #050c07;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.5);
+  --shadow-md: 0 4px 14px rgba(0,0,0,0.6);
+  --shadow-lg: 0 8px 28px rgba(0,0,0,0.7);
 }
 
 /* ── Purple ──────────────────────────────────────────────── */
@@ -172,6 +214,12 @@
   --status-idle: #4ade80;
   --status-working: #fb923c;
   --status-error: #f87171;
+  --cta: #9b41c8;
+  --cta-hover: #bc70e8;
+  --cta-text: #ffffff;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.5);
+  --shadow-md: 0 4px 14px rgba(0,0,0,0.6);
+  --shadow-lg: 0 8px 28px rgba(0,0,0,0.7);
 }
 
 /* ── Ember ───────────────────────────────────────────────── */
@@ -191,6 +239,12 @@
   --status-idle: #4ade80;
   --status-working: #fb923c;
   --status-error: #f87171;
+  --cta: #a08060;
+  --cta-hover: #c0a080;
+  --cta-text: #0f0d0b;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.5);
+  --shadow-md: 0 4px 14px rgba(0,0,0,0.6);
+  --shadow-lg: 0 8px 28px rgba(0,0,0,0.7);
 }
 
 /* ── Twilight ────────────────────────────────────────────── */
@@ -210,6 +264,12 @@
   --status-idle: #4ade80;
   --status-working: #fb923c;
   --status-error: #f87171;
+  --cta: #c841d4;
+  --cta-hover: #e070ec;
+  --cta-text: #ffffff;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.5);
+  --shadow-md: 0 4px 14px rgba(0,0,0,0.6);
+  --shadow-lg: 0 8px 28px rgba(0,0,0,0.7);
 }
 
 /* ── Base resets ─────────────────────────────────────────── */
@@ -233,6 +293,8 @@ body,
   font-size: 13px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   user-select: none;
 }
 
@@ -289,10 +351,31 @@ body,
   to   { opacity: 1; transform: translateX(0);    }
 }
 
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to   { background-position:  200% 0; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 .animate-fadeInUp    { animation: fadeInUp    220ms cubic-bezier(0.16, 1, 0.3, 1) both; }
 .animate-fadeIn      { animation: fadeIn      160ms ease-out both; }
 .animate-pulse-dot   { animation: pulseDot    1.6s  ease-in-out infinite; }
 .animate-slideInRight{ animation: slideInRight 200ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-spin        { animation: spin        1s    linear infinite; }
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--surface) 25%,
+    var(--surface-hover) 50%,
+    var(--surface) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
 
 /* ── Focus ring ─────────────────────────────────────────── */
 :focus-visible {

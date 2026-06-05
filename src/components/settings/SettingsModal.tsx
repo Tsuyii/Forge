@@ -45,8 +45,8 @@ function ToggleRow({ label, description, checked = false }: { label: string; des
         onClick={() => setOn((v) => !v)}
         className="relative w-8 h-4.5 rounded-full transition-colors shrink-0"
         style={{
-          background: on ? 'var(--accent)' : 'var(--surface-active)',
-          border:     '1px solid var(--border)',
+          background: on ? 'var(--cta)' : 'var(--surface-active)',
+          border:     `1px solid ${on ? 'transparent' : 'var(--border)'}`,
           height:     '18px',
           width:      '32px',
         }}
@@ -76,12 +76,13 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
       onClick={onClose}
     >
       <div
-        className="flex rounded-xl overflow-hidden shadow-2xl animate-fadeInUp"
+        className="flex rounded-xl overflow-hidden animate-fadeInUp"
         style={{
-          background: 'var(--surface)',
-          border:     '1px solid var(--border)',
-          width:      '660px',
-          height:     '460px',
+          background:  'var(--surface)',
+          border:      '1px solid var(--border)',
+          boxShadow:   'var(--shadow-lg)',
+          width:       '660px',
+          height:      '460px',
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -112,11 +113,11 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                   )}
                   style={{
                     color: isActive ? 'var(--text)' : 'var(--text-muted)',
-                    borderLeft: isActive ? '2px solid var(--accent)' : '2px solid transparent',
+                    borderLeft: isActive ? '2px solid var(--cta)' : '2px solid transparent',
                     paddingLeft: isActive ? '10px' : '12px',
                   }}
                 >
-                  <Icon size={13} style={{ color: isActive ? 'var(--accent-bright)' : 'var(--text-muted)' }} />
+                  <Icon size={13} style={{ color: isActive ? 'var(--cta)' : 'var(--text-muted)' }} />
                   {label}
                 </button>
               )
@@ -167,11 +168,11 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                         onClick={() => setTheme(t.key)}
                         className={cn(
                           'flex flex-col items-center gap-1.5 p-2 rounded-lg border transition-all',
-                          theme === t.key && 'ring-1 ring-[var(--accent)]'
+                          theme === t.key && 'ring-1 ring-[var(--cta)]'
                         )}
                         style={{
                           background:  theme === t.key ? 'var(--surface-active)' : 'var(--surface-hover)',
-                          borderColor: theme === t.key ? 'var(--accent)' : 'var(--border)',
+                          borderColor: theme === t.key ? 'var(--cta)' : 'var(--border)',
                         }}
                       >
                         <div

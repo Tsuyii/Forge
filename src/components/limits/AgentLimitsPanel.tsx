@@ -22,18 +22,31 @@ function formatTimeRemaining(ms: number): string {
 }
 
 function UsageBar({ pct, label }: { pct: number; label: string }) {
-  const filled = Math.round(pct / 10)
-  const empty = 10 - filled
-  const color = pct > 30 ? 'var(--accent)' : pct > 10 ? 'var(--status-working)' : 'var(--status-error)'
+  const color =
+    pct > 30 ? 'var(--status-idle)' :
+    pct > 10 ? 'var(--status-working)' :
+               'var(--status-error)'
 
   return (
-    <div className="flex items-center gap-2 text-[10px] font-mono">
-      <span className="w-14 shrink-0" style={{ color: 'var(--text-muted)' }}>{label}</span>
-      <span style={{ color }}>
-        {'█'.repeat(filled)}
-        <span style={{ color: 'var(--text-subtle)' }}>{'░'.repeat(empty)}</span>
-      </span>
-      <span style={{ color: 'var(--text-muted)' }}>{pct}% left</span>
+    <div className="flex flex-col gap-1">
+      <div className="flex items-center justify-between">
+        <span className="text-[10px] font-mono" style={{ color: 'var(--text-subtle)' }}>{label}</span>
+        <span className="text-[10px] font-mono tabular font-medium" style={{ color }}>{pct}%</span>
+      </div>
+      <div
+        className="h-[3px] rounded-full overflow-hidden"
+        style={{ background: 'var(--surface-active)' }}
+        role="progressbar"
+        aria-valuenow={pct}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label={`${label}: ${pct}% remaining`}
+      >
+        <div
+          className="h-full rounded-full transition-all duration-500 ease-out"
+          style={{ width: `${Math.max(2, pct)}%`, background: color }}
+        />
+      </div>
     </div>
   )
 }
@@ -96,23 +109,25 @@ function AccountCard({ account, isActive, provider, onSwitch, onRemove }: Accoun
       </div>
 
       {/* Usage bars */}
-      <div className="flex flex-col gap-1.5 pl-4">
-        <UsageBar pct={account.usage.sessionPct} label="Session" />
-        <div className="text-[9px] pl-16" style={{ color: 'var(--text-subtle)' }}>
-          Resets in {formatTimeRemaining(account.usage.sessionResetsAt)}
+      <div className="flex flex-col gap-2 pl-4">
+        <div>
+          <UsageBar pct={account.usage.sessionPct} label="Session" />
+          <div className="text-[9px] mt-0.5 text-right" style={{ color: 'var(--text-subtle)' }}>
+            Resets {formatTimeRemaining(account.usage.sessionResetsAt)}
+          </div>
         </div>
 
         {account.usage.weeklyPct !== null ? (
-          <>
+          <div>
             <UsageBar pct={account.usage.weeklyPct} label="Weekly" />
             {account.usage.weeklyResetsAt && (
-              <div className="text-[9px] pl-16" style={{ color: 'var(--text-subtle)' }}>
-                Resets in {formatTimeRemaining(account.usage.weeklyResetsAt)}
+              <div className="text-[9px] mt-0.5 text-right" style={{ color: 'var(--text-subtle)' }}>
+                Resets {formatTimeRemaining(account.usage.weeklyResetsAt)}
               </div>
             )}
-          </>
+          </div>
         ) : (
-          <div className="text-[10px] pl-16" style={{ color: 'var(--text-subtle)' }}>
+          <div className="text-[10px] text-right" style={{ color: 'var(--text-subtle)' }}>
             Weekly N/A
           </div>
         )}

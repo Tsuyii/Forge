@@ -93,13 +93,13 @@ export function WorkspaceToolbar({
               'relative flex items-center justify-center w-7 h-7 rounded transition-all',
               isActive ? 'bg-[var(--surface-active)]' : 'hover:bg-[var(--surface-hover)]'
             )}
-            style={{ color: isActive ? 'var(--accent-bright)' : 'var(--text-muted)' }}
+            style={{ color: isActive ? 'var(--cta)' : 'var(--text-muted)' }}
           >
             <Icon size={13} />
             {isActive && (
               <span
                 className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3 h-[2px] rounded-full"
-                style={{ background: 'var(--accent-bright)' }}
+                style={{ background: 'var(--cta)' }}
               />
             )}
           </button>
