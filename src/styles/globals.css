@@ -1,0 +1,269 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: var(--bg);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-active: var(--surface-active);
+  --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
+  --color-text: var(--text);
+  --color-muted: var(--text-muted);
+  --color-subtle: var(--text-subtle);
+  --color-accent: var(--accent);
+  --color-accent-bright: var(--accent-bright);
+  --color-status-idle: var(--status-idle);
+  --color-status-working: var(--status-working);
+  --color-status-error: var(--status-error);
+
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", ui-monospace, monospace;
+}
+
+/* ── Graphite (default) ─────────────────────────────────── */
+:root,
+[data-theme="graphite"] {
+  --bg: #111111;
+  --bg-secondary: #0d0d0d;
+  --surface: #1c1c1c;
+  --surface-hover: #252525;
+  --surface-active: #2e2e2e;
+  --border: #2e2e2e;
+  --border-subtle: #222222;
+  --text: #e0e0e0;
+  --text-muted: #737373;
+  --text-subtle: #4d4d4d;
+  --accent: #8b8b8b;
+  --accent-bright: #c0c0c0;
+  --status-idle: #4ade80;
+  --status-working: #fb923c;
+  --status-error: #f87171;
+}
+
+/* ── Midnight ────────────────────────────────────────────── */
+[data-theme="midnight"] {
+  --bg: #000000;
+  --bg-secondary: #000000;
+  --surface: #111111;
+  --surface-hover: #1a1a1a;
+  --surface-active: #222222;
+  --border: #222222;
+  --border-subtle: #191919;
+  --text: #f0f0f0;
+  --text-muted: #666666;
+  --text-subtle: #444444;
+  --accent: #888888;
+  --accent-bright: #bbbbbb;
+  --status-idle: #4ade80;
+  --status-working: #fb923c;
+  --status-error: #f87171;
+}
+
+/* ── Navy ────────────────────────────────────────────────── */
+[data-theme="navy"] {
+  --bg: #0a0f1e;
+  --bg-secondary: #060c18;
+  --surface: #0f1829;
+  --surface-hover: #162033;
+  --surface-active: #1d283e;
+  --border: #1e2d4a;
+  --border-subtle: #162035;
+  --text: #d4dff5;
+  --text-muted: #5b7099;
+  --text-subtle: #3d4f6b;
+  --accent: #4a8fd4;
+  --accent-bright: #74aee8;
+  --status-idle: #4ade80;
+  --status-working: #fb923c;
+  --status-error: #f87171;
+}
+
+/* ── Paper ───────────────────────────────────────────────── */
+[data-theme="paper"] {
+  --bg: #fafafa;
+  --bg-secondary: #f5f5f5;
+  --surface: #ffffff;
+  --surface-hover: #f0f0f0;
+  --surface-active: #e8e8e8;
+  --border: #e0e0e0;
+  --border-subtle: #ebebeb;
+  --text: #1a1a1a;
+  --text-muted: #737373;
+  --text-subtle: #a3a3a3;
+  --accent: #3b3b3b;
+  --accent-bright: #1a1a1a;
+  --status-idle: #16a34a;
+  --status-working: #ea580c;
+  --status-error: #dc2626;
+}
+
+/* ── Orange ──────────────────────────────────────────────── */
+[data-theme="orange"] {
+  --bg: #1a1008;
+  --bg-secondary: #150d05;
+  --surface: #241606;
+  --surface-hover: #2e1c0a;
+  --surface-active: #38220e;
+  --border: #3d2510;
+  --border-subtle: #2e1c0a;
+  --text: #f0e0cc;
+  --text-muted: #9c7254;
+  --text-subtle: #6b4e36;
+  --accent: #c87941;
+  --accent-bright: #e8a060;
+  --status-idle: #4ade80;
+  --status-working: #fb923c;
+  --status-error: #f87171;
+}
+
+/* ── Red ─────────────────────────────────────────────────── */
+[data-theme="red"] {
+  --bg: #1a0808;
+  --bg-secondary: #150505;
+  --surface: #240c0c;
+  --surface-hover: #2e1010;
+  --surface-active: #381414;
+  --border: #3d1515;
+  --border-subtle: #2e1010;
+  --text: #f5d5d5;
+  --text-muted: #9c5252;
+  --text-subtle: #6b3737;
+  --accent: #c84141;
+  --accent-bright: #e87070;
+  --status-idle: #4ade80;
+  --status-working: #fb923c;
+  --status-error: #f87171;
+}
+
+/* ── Green ───────────────────────────────────────────────── */
+[data-theme="green"] {
+  --bg: #080f0a;
+  --bg-secondary: #050c07;
+  --surface: #0c160e;
+  --surface-hover: #101e12;
+  --surface-active: #142616;
+  --border: #162c19;
+  --border-subtle: #101e12;
+  --text: #d5f5dc;
+  --text-muted: #527b5a;
+  --text-subtle: #37563d;
+  --accent: #41c854;
+  --accent-bright: #70e882;
+  --status-idle: #4ade80;
+  --status-working: #fb923c;
+  --status-error: #f87171;
+}
+
+/* ── Purple ──────────────────────────────────────────────── */
+[data-theme="purple"] {
+  --bg: #0f0818;
+  --bg-secondary: #0b0513;
+  --surface: #150c20;
+  --surface-hover: #1c1228;
+  --surface-active: #231830;
+  --border: #2a1c3a;
+  --border-subtle: #1c1228;
+  --text: #e8d5f5;
+  --text-muted: #8052a8;
+  --text-subtle: #573773;
+  --accent: #9b41c8;
+  --accent-bright: #bc70e8;
+  --status-idle: #4ade80;
+  --status-working: #fb923c;
+  --status-error: #f87171;
+}
+
+/* ── Ember ───────────────────────────────────────────────── */
+[data-theme="ember"] {
+  --bg: #141210;
+  --bg-secondary: #0f0d0b;
+  --surface: #1c1916;
+  --surface-hover: #24201c;
+  --surface-active: #2c2722;
+  --border: #342e28;
+  --border-subtle: #24201c;
+  --text: #f0e8e0;
+  --text-muted: #7a6b5e;
+  --text-subtle: #524840;
+  --accent: #a08060;
+  --accent-bright: #c0a080;
+  --status-idle: #4ade80;
+  --status-working: #fb923c;
+  --status-error: #f87171;
+}
+
+/* ── Twilight ────────────────────────────────────────────── */
+[data-theme="twilight"] {
+  --bg: #140818;
+  --bg-secondary: #100513;
+  --surface: #1c0c20;
+  --surface-hover: #241228;
+  --surface-active: #2c1830;
+  --border: #36203a;
+  --border-subtle: #241228;
+  --text: #f0d5f5;
+  --text-muted: #9c52a8;
+  --text-subtle: #6b3773;
+  --accent: #c841d4;
+  --accent-bright: #e070ec;
+  --status-idle: #4ade80;
+  --status-working: #fb923c;
+  --status-error: #f87171;
+}
+
+/* ── Base resets ─────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+/* Allow text selection inside terminal panes */
+.xterm,
+.allow-select {
+  user-select: text;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-subtle);
+}
+
+/* Drag region for custom title bar */
+[data-tauri-drag-region] {
+  -webkit-app-region: drag;
+}
+[data-tauri-drag-region] button,
+[data-tauri-drag-region] a,
+[data-tauri-drag-region] input {
+  -webkit-app-region: no-drag;
+}
