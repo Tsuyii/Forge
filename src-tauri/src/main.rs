@@ -2,5 +2,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    multiagent_tmp_lib::run()
+    forge_lib::run()
 }
