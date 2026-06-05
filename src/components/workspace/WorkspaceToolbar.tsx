@@ -1,4 +1,4 @@
-import { Globe, FileText, GitBranch, Grid2x2, Mic, Bell, X, ChevronDown, Minus, Plus, LayoutGrid, Gauge } from 'lucide-react'
+import { Globe, FileText, GitBranch, Grid2x2, Mic, Bell, X, ChevronDown, Minus, Plus, LayoutGrid, Gauge, Brain } from 'lucide-react'
 import type { Workspace } from '../../types'
 import { AGENT_CONFIGS } from '../../types'
 import { useWorkspaceStore } from '../../store/workspaceStore'
@@ -19,6 +19,7 @@ const PANEL_BUTTONS = [
   { id: 'tasks',   icon: Grid2x2,    title: 'Agent Tasks'  },
   { id: 'voice',   icon: Mic,        title: 'Voice'        },
   { id: 'limits',  icon: Gauge,      title: 'Agent Limits (Ctrl+Shift+L)' },
+  { id: 'memory',  icon: Brain,      title: 'Memory (Ctrl+Shift+Y)' },
 ]
 
 export function WorkspaceToolbar({

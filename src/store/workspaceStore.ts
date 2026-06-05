@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { Workspace, Pane, AgentType, WorkspaceLayout } from '../types'
 import { generateId } from '../lib/utils'
+import { useMemoryStore } from './memoryStore'
 
 interface WorkspaceState {
   workspaces: Workspace[]
@@ -76,6 +77,30 @@ export const useWorkspaceStore = create<WorkspaceState>()(
 
       closeWorkspace: (id) =>
         set((s) => {
+          // Auto-save to memory if enabled
+          const memStore = useMemoryStore.getState()
+          if (memStore.autoSave) {
+            const ws = s.workspaces.find((w) => w.id === id)
+            if (ws) {
+              const agents = [...new Set(ws.panes.map((p) => p.agent))]
+              const title = `Session — ${ws.name} · ${new Date().toLocaleString('en-GB', {
+                day: 'numeric',
+                month: 'short',
+                hour: '2-digit',
+                minute: '2-digit',
+              })}`
+              memStore.addNote({
+                title,
+                content: `# ${title}\n\nWorkspace: ${ws.name}\nPath: ${ws.path}\nAgents: ${agents.join(', ')}\nPanes: ${ws.panes.length}\n`,
+                workspaceId: ws.id,
+                workspaceName: ws.name,
+                workspacePath: ws.path,
+                agents,
+                tags: ['Session'],
+              })
+            }
+          }
+
           const remaining = s.workspaces.filter((w) => w.id !== id)
           const active =
             s.activeWorkspaceId === id

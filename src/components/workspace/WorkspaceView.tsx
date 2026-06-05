@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
 import { TabBar } from './TabBar'
 import { WorkspaceToolbar } from './WorkspaceToolbar'
 import { PaneGrid } from './PaneGrid'
@@ -9,11 +10,35 @@ interface WorkspaceViewProps {
   workspace: Workspace
 }
 
+async function openMemoryWindow() {
+  try {
+    const existing = await WebviewWindow.getByLabel('memory')
+    if (existing) {
+      await existing.setFocus()
+      return
+    }
+    new WebviewWindow('memory', {
+      url: '/#/memory',
+      title: 'Memory',
+      width: 900,
+      height: 650,
+      resizable: true,
+      decorations: true,
+    })
+  } catch (err) {
+    console.error('[WorkspaceView] Failed to open memory window:', err)
+  }
+}
+
 export function WorkspaceView({ workspace }: WorkspaceViewProps) {
   const [fontSizePx, setFontSizePx] = useState(13)
   const [activePanels, setActivePanels] = useState<Set<string>>(new Set())
 
   function togglePanel(panel: string) {
+    if (panel === 'memory') {
+      openMemoryWindow()
+      return
+    }
     setActivePanels((prev) => {
       const next = new Set(prev)
       if (next.has(panel)) next.delete(panel)
@@ -22,12 +47,17 @@ export function WorkspaceView({ workspace }: WorkspaceViewProps) {
     })
   }
 
-  // Ctrl+Shift+L shortcut to toggle limits panel
+  // Ctrl+Shift+L → limits panel
+  // Ctrl+Shift+Y → memory window
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       if (e.ctrlKey && e.shiftKey && e.key === 'L') {
         e.preventDefault()
         togglePanel('limits')
+      }
+      if (e.ctrlKey && e.shiftKey && e.key === 'Y') {
+        e.preventDefault()
+        openMemoryWindow()
       }
     }
     window.addEventListener('keydown', onKeyDown)
