@@ -31,10 +31,11 @@ const STATUS_LABEL: Record<string, string> = {
 }
 
 export function TerminalPane({ pane, workspace, isActive, onActivate, onClose, fontSizePx }: TerminalPaneProps) {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const termRef      = useRef<Terminal | null>(null)
-  const fitRef       = useRef<FitAddon | null>(null)
-  const unlistenRef  = useRef<UnlistenFn | null>(null)
+  const containerRef  = useRef<HTMLDivElement>(null)
+  const termRef       = useRef<Terminal | null>(null)
+  const fitRef        = useRef<FitAddon | null>(null)
+  const unlistenRefs  = useRef<UnlistenFn[]>([])
+  const ptyIdRef      = useRef<string | null>(null)
   const { setPtyId, setPaneStatus } = useWorkspaceStore()
   const cfg = AGENT_CONFIGS[pane.agent]
 
@@ -88,11 +89,13 @@ export function TerminalPane({ pane, workspace, isActive, onActivate, onClose, f
 
     async function startPty() {
       try {
-        const command = pane.agent === 'custom'
-          ? (pane.customCommand || 'powershell')
-          : pane.agent === 'shell'
-          ? 'powershell'
-          : cfg.command
+        // Always launch PowerShell as the host shell.
+        // On Windows, agent CLIs are .cmd/.ps1 shims that CreateProcess can't run
+        // directly — routing through PowerShell handles PATH resolution properly.
+        const agentCommand =
+          pane.agent === 'custom' ? (pane.customCommand ?? null) :
+          pane.agent === 'shell'  ? null :
+          cfg.command || null
 
         const dims = term.rows && term.cols
           ? { cols: term.cols, rows: term.rows }
@@ -108,25 +111,28 @@ export function TerminalPane({ pane, workspace, isActive, onActivate, onClose, f
         }
 
         const ptyId: string = await invoke('create_pty', {
-          command,
+          command: 'powershell',
           cwd:     workspace.path,
           cols:    dims.cols,
           rows:    dims.rows,
           envVars,
         })
 
+        ptyIdRef.current = ptyId
         setPtyId(workspace.id, pane.id, ptyId)
         setPaneStatus(workspace.id, pane.id, 'idle')
 
-        unlistenRef.current = await listen<string>(`pty-data-${ptyId}`, (event) => {
+        const unlistenData = await listen<string>(`pty-data-${ptyId}`, (event) => {
           term.write(event.payload)
           setPaneStatus(workspace.id, pane.id, 'working')
         })
 
-        await listen<void>(`pty-exit-${ptyId}`, () => {
+        const unlistenExit = await listen<void>(`pty-exit-${ptyId}`, () => {
           term.write('\r\n\x1b[90m[process exited]\x1b[0m\r\n')
           setPaneStatus(workspace.id, pane.id, 'idle')
         })
+
+        unlistenRefs.current = [unlistenData, unlistenExit]
 
         term.onData((data) => {
           invoke('write_pty', { ptyId, data }).catch(() => {})
@@ -135,6 +141,13 @@ export function TerminalPane({ pane, workspace, isActive, onActivate, onClose, f
         term.onResize(({ cols, rows }) => {
           invoke('resize_pty', { ptyId, cols, rows }).catch(() => {})
         })
+
+        // Auto-run agent command once shell is ready (PowerShell needs ~500ms to init)
+        if (agentCommand) {
+          setTimeout(() => {
+            invoke('write_pty', { ptyId, data: agentCommand + '\r' }).catch(() => {})
+          }, 600)
+        }
       } catch (err) {
         term.write(`\r\n\x1b[31m[Failed to start: ${err}]\x1b[0m\r\n`)
         setPaneStatus(workspace.id, pane.id, 'error')
@@ -148,8 +161,8 @@ export function TerminalPane({ pane, workspace, isActive, onActivate, onClose, f
 
     return () => {
       ro.disconnect()
-      unlistenRef.current?.()
-      if (pane.ptyId) invoke('close_pty', { ptyId: pane.ptyId }).catch(() => {})
+      unlistenRefs.current.forEach((fn) => fn())
+      if (ptyIdRef.current) invoke('close_pty', { ptyId: ptyIdRef.current }).catch(() => {})
       term.dispose()
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps

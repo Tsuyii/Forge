@@ -9,6 +9,7 @@ use uuid::Uuid;
 pub(crate) struct PtySession {
     writer: Box<dyn Write + Send>,
     master: Box<dyn portable_pty::MasterPty + Send>,
+    _child: Box<dyn portable_pty::Child + Send + Sync>,
 }
 
 pub type PtyStore = Arc<Mutex<HashMap<String, PtySession>>>;
@@ -35,7 +36,14 @@ pub async fn create_pty(
     let mut cmd = CommandBuilder::new(&command);
     cmd.cwd(&cwd);
 
-    // Add environment variables for agent CLIs
+    // Prepend Git bash to PATH so hooks that call bash/sh resolve correctly
+    #[cfg(target_os = "windows")]
+    {
+        let git_bins = "C:\\Program Files\\Git\\usr\\bin;C:\\Program Files\\Git\\bin";
+        let current_path = std::env::var("PATH").unwrap_or_default();
+        cmd.env("PATH", format!("{};{}", git_bins, current_path));
+    }
+
     cmd.env("TERM", "xterm-256color");
     cmd.env("COLORTERM", "truecolor");
     if let Some(vars) = env_vars {
@@ -44,7 +52,7 @@ pub async fn create_pty(
         }
     }
 
-    let _child = pair.slave.spawn_command(cmd).map_err(|e| e.to_string())?;
+    let child = pair.slave.spawn_command(cmd).map_err(|e| e.to_string())?;
 
     let writer = pair.master.take_writer().map_err(|e| e.to_string())?;
     let mut reader = pair.master.try_clone_reader().map_err(|e| e.to_string())?;
@@ -69,6 +77,7 @@ pub async fn create_pty(
     let session = PtySession {
         writer,
         master: pair.master,
+        _child: child,
     };
 
     store.lock().unwrap().insert(pty_id_clone, session);

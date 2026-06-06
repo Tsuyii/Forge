@@ -385,3 +385,226 @@ body,
 
 /* ── Tabular numbers for metrics ───────────────────────── */
 .tabular { font-variant-numeric: tabular-nums; }
+
+/* ══════════════════════════════════════════════════════════
+   FORGE DESIGN SYSTEM — Component Classes
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Background patterns ─────────────────────────────────── */
+.forge-dot-grid {
+  background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* ── Keyframes ───────────────────────────────────────────── */
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow:
+      0 0 18px color-mix(in srgb, var(--cta) 12%, transparent),
+      0 0 0 1px color-mix(in srgb, var(--cta) 18%, transparent);
+  }
+  50% {
+    box-shadow:
+      0 0 36px color-mix(in srgb, var(--cta) 22%, transparent),
+      0 0 0 1px color-mix(in srgb, var(--cta) 32%, transparent);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-3px); }
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
+}
+
+.animate-glow-pulse { animation: glowPulse 3s ease-in-out infinite; }
+.animate-float      { animation: float    4s ease-in-out infinite; }
+
+/* ── Cards ───────────────────────────────────────────────── */
+.forge-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  transition: background 0.12s, border-color 0.12s, box-shadow 0.12s;
+}
+.forge-card[data-active="true"] {
+  background: color-mix(in srgb, var(--cta) 7%, transparent);
+  border-color: color-mix(in srgb, var(--cta) 55%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--cta) 18%, transparent);
+}
+.forge-card:not([disabled]):not([data-active="true"]):hover {
+  background: var(--surface-hover);
+}
+
+/* ── Pills ───────────────────────────────────────────────── */
+.forge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.forge-pill:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+.forge-pill[data-active="true"] {
+  background: color-mix(in srgb, var(--cta) 10%, transparent);
+  border-color: color-mix(in srgb, var(--cta) 35%, transparent);
+  color: var(--cta);
+}
+
+/* ── Inputs ──────────────────────────────────────────────── */
+.forge-input {
+  padding: 9px 13px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  outline: none;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  transition: border-color 0.12s, box-shadow 0.12s;
+}
+.forge-input::placeholder {
+  color: var(--text-subtle);
+}
+.forge-input:focus {
+  border-color: var(--cta);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--cta) 10%, transparent);
+}
+.forge-input[data-filled="true"] {
+  border-color: color-mix(in srgb, var(--cta) 40%, transparent);
+}
+
+/* ── Buttons ─────────────────────────────────────────────── */
+.forge-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 13px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.12s, color 0.12s;
+}
+.forge-btn-secondary:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.forge-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-subtle);
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+.forge-btn-ghost:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.forge-counter-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface-active);
+  color: var(--text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.1s, color 0.1s;
+}
+.forge-counter-btn:hover:not(:disabled) {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+.forge-counter-btn--active {
+  color: var(--cta);
+  background: color-mix(in srgb, var(--cta) 10%, transparent);
+  border-color: color-mix(in srgb, var(--cta) 25%, transparent);
+}
+
+.forge-btn-cta {
+  background: var(--cta);
+  color: var(--cta-text);
+  border: 1px solid transparent;
+  box-shadow:
+    0 4px 20px color-mix(in srgb, var(--cta) 35%, transparent),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+  letter-spacing: -0.01em;
+  transition: background 0.15s, box-shadow 0.15s, transform 0.12s;
+}
+.forge-btn-cta:hover:not(:disabled) {
+  background: var(--cta-hover);
+  box-shadow:
+    0 6px 28px color-mix(in srgb, var(--cta) 48%, transparent),
+    inset 0 1px 0 rgba(255,255,255,0.12);
+  transform: translateY(-1px);
+}
+.forge-btn-cta:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px color-mix(in srgb, var(--cta) 25%, transparent);
+}
+
+.forge-btn-disabled {
+  background: var(--surface-active);
+  color: var(--text-subtle);
+  border: 1px solid var(--border);
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Workspace hero panel ────────────────────────────────── */
+.forge-hero-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 320px;
+  flex-shrink: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border-subtle);
+}
+
+/* ── Sidebar workspace item ──────────────────────────────── */
+.forge-ws-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  text-align: left;
+  transition: background 0.1s;
+  position: relative;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+}
+.forge-ws-item:hover:not([data-active="true"]) {
+  background: var(--surface-hover);
+}
+.forge-ws-item[data-active="true"] {
+  background: var(--surface-active);
+}
